@@ -1,0 +1,3 @@
+gitea_url      = "http://localhost:3000"
+gitea_token    = ""
+gitea_username = ""
