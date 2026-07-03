@@ -1,0 +1,7 @@
+# Gitea configuration
+gitea_url      = "http://localhost:3000"
+gitea_token    = ""
+gitea_username = ""
+
+# NGINX configuration
+nginx_host_port = 8080
