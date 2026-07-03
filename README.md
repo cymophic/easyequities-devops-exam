@@ -1,6 +1,6 @@
-# EasyEquities DevOps Exam
+# DevOps Exam Submission
 
-Take-home DevOps exam submission testing skills in **Docker**, **Terraform**, and **Git** by self-hosting a Gitea Git server and managing infrastructure as code.
+My submission for a DevOps exam about self-hosting a Gitea Git server and managing infrastructure as code.
 
 ---
 
@@ -9,7 +9,6 @@ Take-home DevOps exam submission testing skills in **Docker**, **Terraform**, an
 | | |
 |---|---|
 | **Company** | EasyEquities Philippines |
-| **Position** | DevOps Engineer |
 | **Date Received** | July 2, 2026 |
 | **Submission Deadline** | July 5, 2026 |
 | **Submit To** | devops-exam@easyequities.com.ph |
@@ -24,6 +23,7 @@ Take-home DevOps exam submission testing skills in **Docker**, **Terraform**, an
 4. 🚀 [Getting Started](#-getting-started)
 5. 🔢 [Parts Overview](#-parts-overview)
 6. 📤 [Submission](#-submission)
+7. 📝 [Notes](#-notes)
 
 ---
 
@@ -39,16 +39,18 @@ Self-host a Gitea Git server using Docker Compose, manage infrastructure and Doc
 easyequities-devops-exam/
 ├── terraform/
 │   ├── modules/
-│   │   └── docker-app/          # Reusable Docker module
-│   │       ├── main.tf          # Module resource definitions
-│   │       ├── variables.tf     # Module input variables
-│   │       └── outputs.tf       # Module output values
-│   ├── main.tf                  # Root Terraform config
-│   ├── variables.tf             # Root variable declarations
-│   └── outputs.tf               # Root output definitions
-├── outputs/                     # Captured submission outputs
-├── .gitignore                   # Excludes Terraform state, .tfvars, etc.
-└── docker-compose.yml           # Docker Compose setup
+│   │   └── docker-app/               # Reusable Docker module
+│   │       ├── main.tf               # Module resource definitions
+│   │       ├── variables.tf          # Module input variables
+│   │       └── outputs.tf            # Module output values
+│   ├── main.tf                       # Root Terraform config
+│   ├── variables.tf                  # Root variable declarations
+│   ├── outputs.tf                    # Root output definitions
+│   ├── terraform.tfvars              # Variable values (gitignored)
+│   └── terraform.tfvars.example      # Variable template
+├── outputs/                          # Captured submission outputs
+├── .gitignore                        # Excludes Terraform state, .tfvars, etc.
+└── docker-compose.yml                # Docker Compose setup
 ```
 
 ---
@@ -82,17 +84,11 @@ Go to **Settings → Applications → Manage Access Tokens** and generate a toke
 
 Save the token — you'll need it for Terraform.
 
-### 3. Initialize Terraform
+### 3. Initialize and Apply Terraform
 
 ```bash
 cd terraform/
 terraform init
-```
-
-### 4. Apply Terraform
-
-```bash
-cd terraform/
 terraform apply
 ```
 
@@ -100,14 +96,14 @@ This will:
 - Create a private Gitea repository named `terraform-docker-exam`
 - Configure branch protection on `main`
 - Create Docker network `exam-network` and volume `exam-web-data`
-- Start Nginx container `exam-web-server` on port `8080`
+- Start Nginx container `exam-web-server` on port `8081`
 - Start health checker container `exam-health-checker`
 
-### 5. Verify
+### 4. Verify
 
 ```bash
 # Nginx should be accessible
-curl http://localhost:8080
+curl http://localhost:8081
 
 # Health checker should be running
 docker logs exam-health-checker
@@ -122,7 +118,7 @@ docker logs exam-health-checker
 | **Part 1** | Deploy Gitea using `docker-compose.yml` |
 | **Part 2** | Terraform — create private Gitea repo + branch protection |
 | **Part 3** | Terraform — Docker provider via reusable module (`modules/docker-app/`) |
-| **Part 4** | Git workflow — conventional commits, branching, push to Gitea |
+| **Part 4** | Git workflow — conventional commits, `update-port` branch, push to Gitea |
 
 ---
 
@@ -158,18 +154,12 @@ curl -s -H "Authorization: token TOKEN" $REPO > outputs/gitea-repo.json
 curl -s -H "Authorization: token TOKEN" $REPO/branch_protections > outputs/gitea-branch-protection.json
 ```
 
-### Send Submission Email
+---
 
-```
-To: devops-exam@easyequities.com.ph
-Subject: DevOps Exam Submission - Luis Abhram Valenciano Mata
+## 📝 Notes
 
-Hi,
+### Why `terraform/` folder instead of root
+Keeping Terraform files in a dedicated `terraform/` folder is a common convention for projects that mix application and infrastructure code. It keeps the project root clean and makes it clear where infrastructure code lives.
 
-Please find my DevOps Engineer Exam submission at the following GitHub repository:
-https://github.com/cymophic/devops-exam-easyequities
-
-Thank you.
-
-Luis Abhram Valenciano Mata
-```
+### Why `terraform.tfvars` is gitignored but `.example` is committed
+`terraform.tfvars` contains sensitive values like tokens and credentials — it should never be committed. The `.example` file serves as a reference for what values are needed.
