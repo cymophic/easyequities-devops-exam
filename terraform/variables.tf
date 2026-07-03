@@ -13,3 +13,9 @@ variable "gitea_username" {
   description = "Gitea username"
   type        = string
 }
+
+variable "nginx_host_port" {
+  description = "Host port to map to Nginx container port 80"
+  type        = number
+  default     = 8080
+}

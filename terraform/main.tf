@@ -24,3 +24,8 @@ resource "gitea_repository_branch_protection" "main" {
   rule_name   = "main"
   enable_push = false
 }
+
+module "docker_app" {
+  source          = "./modules/docker-app"
+  nginx_host_port = var.nginx_host_port
+}
